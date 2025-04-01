@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: social_int_analyses
+Version: 0.0.1
+Summary: Combine two-photon with tracking data
+Home-page: https://github.com/GiocomoLab/TwoPUtils
+Author: ESay
+Author-email: ellaksay@gmail.com
+License: BSD
+Classifier: Development Status :: 3 - Alpha
+Classifier: Topic :: Utilities
+Classifier: License :: OSI Approved :: BSD License
+
+"# ESay social interaction tools"
