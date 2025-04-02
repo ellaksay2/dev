@@ -367,3 +367,120 @@ def is_putative_interneuron(sess, ts_key='dff', method='speed',
         is_int = speed_corr < r_thresh
 
     return is_int
+
+def update_sess_dict(mouse, f, KO = True):
+    scan_str = "%s_%03d_%03d" % (f['scene'],f['session'] ,f['scan'])
+
+    # scan_str = "%s" % (f['scene']) # ,f['session']  ,f['scan'])
+    
+    source_folder = "C:/Users/esay/data/social_interaction/VRData"
+    source_stem = os.path.join(source_folder, mouse, f['date'], f['scene'], scan_str)
+
+    f['mouse']=mouse
+    f.update({'vr_filename': os.path.join("C:/Users/esay/data/social_interaction/VRData",f['mouse'],f['date'],"%s_%d.sqlite" %(f['scene'],f['session'])),
+              'scan_number': f['scan'],
+              'prompt_for_keys': False,
+              'VR_only': True,
+              'scanner': "NLW",
+             })
+    if 'wheel' in f['scene']:
+        f.update(
+            {'fixed_wheel': True
+            })
+    if 'social' in f['scene']:
+        # print(f['scene'])
+        f.update({
+            'tunnel_data': True
+        })
+    if 'emptytunnel' in f['scene']:
+        # print(f['scene'])
+        f.update({
+            'tunnel_data': False
+        })
+    return f
+
+def run_and_save(fdict,comb_frames=0, social = True):
+
+            
+    sess = tpu.sess.Session(**fdict)
+    
+    sess.align_VR_to_2P()
+    # sess.get_trial_info()
+    
+    sess.add_timeseries(speed_raw=sess.vr_data['dz']._values)
+    sess.add_pos_binned_trial_matrix('speed_raw', pos_key = 'pos')
+    
+    sess.add_timeseries(speed=sess.vr_data['dz']._values)
+    sess.add_pos_binned_trial_matrix('speed', pos_key = 'pos', speed_thr=.01, speed = sess.timeseries['speed_raw'].ravel())
+
+    if social == False: 
+        err_lick, err = correct_lick_sensor_error(sess.vr_data['lick'],sess.trial_start_inds, sess.teleport_inds, correction_thr=0.5) #correct for broken sensor
+        sess.add_timeseries(licks_rate = err_lick)
+        sess.add_pos_binned_trial_matrix('licks_rate', pos_key = 'pos')# ,speed_thr=.01, speed = sess.timeseries['speed_raw'].ravel())
+        sess.add_timeseries(licks=err_lick)
+        sess.timeseries['licks'][sess.timeseries['licks']>1]=1
+        sess.add_pos_binned_trial_matrix('licks', pos_key = 'pos')
+    
+        # sess.add_timeseries(licks_rate=sess.vr_data['lick']._values)
+        # sess.add_pos_binned_trial_matrix('licks_rate')# ,speed_thr=.01, speed = sess.timeseries['speed_raw'].ravel())
+        
+        # sess.add_timeseries(licks=sess.vr_data['lick']._values)
+        # sess.timeseries['licks'][sess.timeseries['licks']>1]=1
+        # sess.add_pos_binned_trial_matrix('licks')
+        
+        licks = np.copy(sess.timeseries['licks'])
+        licks[licks>1]=1
+        time = sess.vr_data['time']
+    
+        reward_inds = np.argwhere(sess.vr_data['reward']._values==1).ravel()
+        for r in reward_inds:
+            licks[0,((time-time[r])>=0)&((time-time[r])<2)] = 0
+    
+        sess.add_timeseries(nonconsum_licks = licks)
+        sess.add_pos_binned_trial_matrix('nonconsum_licks', pos_key = 'pos')
+        
+        sess.add_timeseries(licks_sum=licks)
+        sess.add_pos_binned_trial_matrix('licks_sum',use_sum=True, pos_key = 'pos')
+        
+        # if fdict['mouse']=='4467975.4' and fdict['date']=="28_09_2020":
+        #     print("nan it")
+        #     for key in ('licks_rate', 'licks', 'nonconsum_licks', 'licks_sum'):
+        #         print(sess.trial_matrices[key].shape)
+        #         sess.trial_matrices[key][34:68,:]=np.nan
+        #         fig,ax = plt.subplots()
+        #         ax.imshow(sess.trial_matrices[key])
+        #         print(np.isnan(sess.trial_matrices[key]).sum())
+        
+        for key in ('licks_rate', 'licks', 'nonconsum_licks', 'licks_sum'):
+            print(np.isnan(sess.trial_matrices[key][0]).sum())
+        tpu.sess.save_session(sess,'C:/Users/esay/data/social_interaction/VRPkls')
+    
+    tpu.sess.save_session(sess,'C:/Users/esay/data/social_interaction/VRPkls')
+    return comb_frames+sess.vr_data.shape[0]
+
+def correct_lick_sensor_error(licks_, trial_starts, trial_ends, correction_thr=0.5):
+    """
+    Find samples where lick detector was putatively stuck at 1, and set to NaN
+
+    :param licks_:
+    :type licks_:
+    :param trial_starts:
+    :type trial_starts:
+    :param trial_ends:
+    :type trial_ends:
+    :param correction_thr:
+    :type correction_thr:
+    :return:
+    :rtype:
+    """
+    licks = np.copy(licks_)
+    error_count = 0
+    for t_start, t_end in zip(trial_starts, trial_ends):
+        # if >50% of samples have a cumulative lick count of >2
+        # print(licks[t_start:t_end])
+        if sum(licks[t_start:t_end] > 0)/len(licks[t_start:t_end]) > correction_thr:
+            licks[t_start:t_end] = 0
+            # print(f'setting trial {np.where(trial_starts==t_start)[0]} to NaN')
+            error_count += 1
+
+    return licks, error_count

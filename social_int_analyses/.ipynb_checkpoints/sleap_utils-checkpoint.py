@@ -154,14 +154,14 @@ def import_single_slp(filename):
     print(dset_names)
     print()
 
-    print("===locations data shape===")
-    print(locations.shape)
-    print()
+    # print("===locations data shape===")
+    # print(locations.shape)
+    # print()
 
-    print("===nodes===")
-    for i, name in enumerate(node_names):
-        print(f"{i}: {name}")
-    print()
+    # print("===nodes===")
+    # for i, name in enumerate(node_names):
+    #     print(f"{i}: {name}")
+    # print()
 
     
     return data
@@ -297,12 +297,32 @@ def smooth_diff(node_loc, win=25, poly=3):
 
     return node_vel
 
+def pad_vr_data(locations, sess):
+    sess_frames = sess.vr_data.shape[0]
+    loc_frames = locations.shape[0]
+
+    if loc_frames >= sess_frames:
+        print("Warning: VR does not have more frames than tunnel data")
+        return
+
+    padding = sess_frames - loc_frames
+
+    nan_frames = np.zeros((padding, locations.shape[1], locations.shape[2], locations.shape[3]))
+    locations = np.concatenate((nan_frames, locations),axis=0)
+    print("Padding locations. New shape:", locations.shape)
+
+    return locations
+
 def add_tunnel_sess(h5_path, sess):
     
     # import pre-process sleap h5 file
     df = import_single_slp(h5_path)
+    
     #interpolate over missing values
     df['locations'] = fill_missing(df['locations'])
+
+    # pad locations data to equal len of vr data 
+    # df['locations'] = pad_vr_data(df['locations'], sess)
 
     # caluclate head velocity 
     head_loc = df['locations'][:, HEAD_INDEX, :, :]
@@ -355,5 +375,7 @@ def add_tunnel_sess(h5_path, sess):
     print(sess.tunnel_df.keys())
     tpu.sess.save_session(sess,'C:/Users/esay/data/social_interaction/VRPkls')
 
+    tunnel_data = {key: value for key, value in df.items() if key !='locations'}
+    df = pd.DataFrame(tunnel_data)
     return df 
     
