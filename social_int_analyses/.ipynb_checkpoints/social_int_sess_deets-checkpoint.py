@@ -107,7 +107,7 @@ social_2P_sessions = {
         {'date': '04_10_2024' , 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan':1, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_restrict_fam', 'session': 1, 'scan':3, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_restrict_nov', 'session': 1, 'scan':8, 'exp_day':3},
-        {'date': '04_10_2024' , 'scene': 'social_unrestrict_fam', 'session': 1, 'scan':5, 'exp_day':3},
+        # {'date': '04_10_2024' , 'scene': 'social_unrestrict_fam', 'session': 1, 'scan':5, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_unrestrict_nov', 'session': 1, 'scan':10, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_wheel_restrict', 'session': 1, 'scan':12, 'exp_day':3},
         {'date': '05_10_2024' , 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan':1, 'exp_day':4},

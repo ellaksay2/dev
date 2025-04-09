@@ -70,8 +70,8 @@ from social_int_analyses.social_int_sess_deets import social_mice
 ```
 
 ```python
-mouse = social_mice[0]
-d = social_2P_sessions[mouse][2]
+mouse = social_mice[2]
+d = social_2P_sessions[mouse][0]
 print(d)
 
 date, scene, session, scan = d['date'], d['scene'], d['session'], d['scan']

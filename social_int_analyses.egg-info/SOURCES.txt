@@ -1,10 +1,12 @@
 README.md
 setup.py
 social_int_analyses/__init__.py
+social_int_analyses/path_dict_esay.py
+social_int_analyses/sleap_utils.py
 social_int_analyses/social_int_sess_deets.py
 social_int_analyses/utilities_ES.py
-social_int_analyses/sleap_utils.py
 social_int_analyses.egg-info/PKG-INFO
 social_int_analyses.egg-info/SOURCES.txt
 social_int_analyses.egg-info/dependency_links.txt
 social_int_analyses.egg-info/top_level.txt
+social_int_analyses.egg-info/.ipynb_checkpoints/SOURCES-checkpoint.txt

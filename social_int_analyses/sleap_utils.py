@@ -378,4 +378,14 @@ def add_tunnel_sess(h5_path, sess):
     tunnel_data = {key: value for key, value in df.items() if key !='locations'}
     df = pd.DataFrame(tunnel_data)
     return df 
-    
+
+
+# plotting utisl
+
+def plot_trace(df):
+    # df = sess.tunnel_data
+    plt.figure(figsize=(7,7))
+    plt.plot(df['nose_x'],1*df['nose_y'], 'b',label='Nose')
+    # plt.plot(df['leftear_x'][i],-1*df['leftear_y'][i], 'b',label='Left ear')
+    # plt.plot(df['rightear_x'][i],-1*df['rightear_y'][i], 'r',label='Right ear')
+    plt.plot(df['head_x'],1*df['head_y'], 'g',label='Head')
