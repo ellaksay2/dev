@@ -166,36 +166,45 @@ def import_single_slp(filename):
     
     return data
 
-def import_h5_dir(directory):
-    # Get a list of all .h5 files in the directory
-    h5_files = [f for f in os.listdir(directory) if f.endswith('.h5')]
-    print(h5_files)
-    # Initialize an empty list to store data for the DataFrame
+
+def import_h5_dir(directory, social_int_behavior, mouse):
     data = []
 
-    for h5_file in h5_files:
-        print(h5_file)
-        filename = os.path.join(directory, h5_file)
-        # print(filename)
-        # Open and process the .h5 file
-        with h5py.File(filename, "r") as f:
-            # dset_names = list(f.keys())
-            locations = f["tracks"][:].T
-            # print(locations)
-            node_names = [n.decode() for n in f["node_names"][:]]
-            
-            # Append the data to the list
-            condition = extract_condition(h5_file)
-            # print(condition)
-            # filename = extract_filename(h5_file)
-            data.append({
-                'filename': filename,
-                'name': h5_file,
-                'location shape': locations.shape,
-                'locations': locations,
-                'condition': condition
-            })
+    # Get all dates for this mouse
+    for day in range(len(social_int_behavior[mouse])):
+        subdirs = social_int_behavior[mouse][day]['date']
+
+        subdir_path = os.path.join(directory, subdirs)
+        if not os.path.isdir(subdir_path):
+            print(f"Skipping non-directory: {subdir_path}")
+            continue
+
+        # Get all .h5 files in this subdirectory
+        h5_files = [f for f in os.listdir(subdir_path) if f.endswith('.h5')]
+        print(f"Found in {subdir_path}: {h5_files}")
+
+        for h5_file in h5_files:
+            filename = os.path.join(subdir_path, h5_file)
+            try:
+                with h5py.File(filename, "r") as f:
+                    locations = f["tracks"][:].T
+                    node_names = [n.decode() for n in f["node_names"][:]]
+                    condition = extract_condition(h5_file)
+                    data.append({
+                        'filename': filename,
+                        'name': h5_file,
+                        'location shape': locations.shape,
+                        'locations': locations,
+                        'condition': condition,
+                        'mouse': mouse,
+
+                    })
+            except Exception as e:
+                print(f"Error reading {filename}: {e}")
+
     return data
+
+
 
 
 def extract_condition(filename):

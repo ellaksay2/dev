@@ -1,7 +1,7 @@
 import numpy as np
 
 
-social_mice = ( 'social-0914-1', 'social-0914-4', 'social-0921-2') #'social_0106_1',
+social_mice = ( 'social-0914-1', 'social-0914-4', 'social-0921-2', 'social-0043-1', 'social-0051-1', 'social-0051-3','social-0057-1', 'social-0058-3','social-0059-1' ) #'social_0106_1',
 
 
 exclude_list = {
@@ -84,7 +84,69 @@ social_VR_sessions = {
         # {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov',  'scan':, 'exp_day':4},
         {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov_diffsex', 'session': 1, 'scan':1, 'exp_day':4},
         {'date': '06_10_2024' , 'scene': 'social_wheel_restrict', 'session': 1, 'scan':1, 'exp_day':4},
-    )
+    ),
+
+    'social-0043-1': (
+        {'date': '10_05_2025' , 'scene': 'emptytunnel','session': 1,  'scan':1, 'exp_day':1},
+        {'date': '10_05_2025' , 'scene': 'restricted_fam','session': 1,  'scan':1, 'exp_day':1},
+        {'date': '10_05_2025' , 'scene': 'unrestricted_fam','session': 1,  'scan':1, 'exp_day':1},
+        {'date': '11_05_2025' , 'scene': 'restricted_fam','session': 1,  'scan':1, 'exp_day':2},
+        {'date': '11_05_2025' , 'scene': 'unrestricted_fam','session': 1,  'scan':1, 'exp_day':2},
+        {'date': '11_05_2025' , 'scene': 'unrestricted_nov','session': 1,  'scan':1, 'exp_day':2},
+        {'date': '11_05_2025' , 'scene': 'restricted_nov','session': 1,  'scan':1, 'exp_day':2},
+        {'date': '12_05_2025' , 'scene': 'unrestricted_fam','session': 1,  'scan':1, 'exp_day':3},
+        {'date': '12_05_2025' , 'scene': 'unrestricted_nov','session': 1,  'scan':1, 'exp_day':3},
+        {'date': '13_05_2025' , 'scene': 'unrestricted_fam','session': 1,  'scan':1, 'exp_day':4},
+        {'date': '13_05_2025' , 'scene': 'unrestricted_nov','session': 1,  'scan':1, 'exp_day':4},
+        {'date': '14_05_2025' , 'scene': 'unrestricted_nov','session': 1,  'scan':1, 'exp_day':5},
+        {'date': '14_05_2025' , 'scene': 'unrestricted_nov_diffsex','session': 1,  'scan':1, 'exp_day':5},
+        {'date': '14_05_2025' , 'scene': 'restricted_nov_diffsex','session': 1,  'scan':1, 'exp_day':5},
+        {'date': '15_05_2025' , 'scene': 'unrestricted_nov_diffsex','session': 1,  'scan':1, 'exp_day':6},
+        {'date': '15_05_2025' , 'scene': 'unrestricted_nov','session': 1,  'scan':1, 'exp_day':6},
+        
+    ),
+
+    'social-0051-1': (
+        {'date': 'day1' , 'scene': 'emptytunnel','session': 1,  'scan':1, 'exp_day':1},
+        {'date': 'day1' , 'scene': 'restrictwheel','session': 1,  'scan':1, 'exp_day':1},
+        {'date': 'day1' , 'scene': 'restricted_fam','session': 1,  'scan':1, 'exp_day':1},
+        {'date': 'day1' , 'scene': 'unrestricted_fam','session': 1,  'scan':1, 'exp_day':1},
+        
+        
+    ),
+    'social-0057-1': (
+        # {'date': '27_06_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 23, 'exp_day': 1},
+                # {'date': '27_06_2025', 'scene': 'social_emptytunnel', 'session': 1, 'scan': 25, 'exp_day': 1},
+                {'date': '27_06_2025', 'scene': 'social_restrict_fam', 'session': 1, 'scan': 27, 'exp_day': 1},
+                {'date': '27_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 29, 'exp_day': 1},
+                {'date': '27_06_2025', 'scene': 'social_wheel_restrict', 'session': 1, 'scan': 31, 'exp_day': 1},
+
+                # {'date': '28_06_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 2, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_restrict_fam', 'session': 1, 'scan': 4, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 6, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_restrict_nov', 'session': 1, 'scan': 8, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 10, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_wheel_restrict', 'session': 1, 'scan': 12, 'exp_day': 2},
+
+                # {'date': '29_06_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 8, 'exp_day': 3},
+                {'date': '29_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 10, 'exp_day': 3},
+                {'date': '29_06_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 12, 'exp_day': 3},
+
+                # {'date': '30_06_2025', 'scene': 'Env1_fixreward', 'session': 1, 'scan': 23, 'exp_day': 4},
+                {'date': '30_06_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 25, 'exp_day': 4},
+                # {'date': '30_06_2025', 'scene': 'Env2_fixreward', 'session': 1, 'scan': 27, 'exp_day': 4},
+                {'date': '30_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 34, 'exp_day': 4},
+
+                # {'date': '01_07_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 19, 'exp_day': 5},
+                {'date': '01_07_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 21, 'exp_day': 5},
+                {'date': '01_07_2025', 'scene': 'social_restrict_nov_diffsex', 'session': 1, 'scan': 23, 'exp_day': 5},
+                {'date': '01_07_2025', 'scene': 'social_unrestrict_nov_diffsex', 'session': 2, 'scan': 25, 'exp_day': 5},
+
+                # {'date': '02_07_2025', 'scene': 'Env1_to_Env2_with_nov', 'session': 1, 'scan': 3, 'exp_day': 6},
+                {'date': '02_07_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 5, 'exp_day': 6},
+                {'date': '02_07_2025', 'scene': 'social_unrestrict_nov_diffsex', 'session': 1, 'scan': 7, 'exp_day': 6},
+                # {'date': '02_07_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 2, 'scan': 9, 'exp_day': 6},
+                ),
 }
 
 
@@ -107,7 +169,7 @@ social_2P_sessions = {
         {'date': '04_10_2024' , 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan':1, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_restrict_fam', 'session': 1, 'scan':3, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_restrict_nov', 'session': 1, 'scan':8, 'exp_day':3},
-        # {'date': '04_10_2024' , 'scene': 'social_unrestrict_fam', 'session': 1, 'scan':5, 'exp_day':3},
+        {'date': '04_10_2024' , 'scene': 'social_unrestrict_fam', 'session': 1, 'scan':5, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_unrestrict_nov', 'session': 1, 'scan':10, 'exp_day':3},
         {'date': '04_10_2024' , 'scene': 'social_wheel_restrict', 'session': 1, 'scan':12, 'exp_day':3},
         {'date': '05_10_2024' , 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan':1, 'exp_day':4},
@@ -116,7 +178,7 @@ social_2P_sessions = {
         {'date': '06_10_2024' , 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan':11, 'exp_day':5},
         {'date': '06_10_2024' , 'scene': 'social_restrict_nov_diffsex', 'session': 1, 'scan':5, 'exp_day':5},
         # {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov',  'scan':, 'exp_day':5},
-        {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov', 'session': 2, 'scan':3, 'exp_day':5},
+        {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov', 'session': 1, 'scan':3, 'exp_day':5},
         {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov_diffsex', 'session': 1, 'scan':7, 'exp_day':5},
         {'date': '06_10_2024' , 'scene': 'social_wheel_restrict', 'session': 1, 'scan':9, 'exp_day':5},
     ),
@@ -164,7 +226,39 @@ social_2P_sessions = {
         # {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov',  'scan':, 'exp_day':4},
         {'date': '06_10_2024' , 'scene': 'social_unrestrict_nov_diffsex', 'session': 1, 'scan':5, 'exp_day':4},
         {'date': '06_10_2024' , 'scene': 'social_wheel_restrict', 'session': 1, 'scan':7, 'exp_day':4},
-    )
+    ),
+    'social-0057-1': ({'date': '27_06_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 23, 'exp_day': 1},
+                {'date': '27_06_2025', 'scene': 'social_emptytunnel', 'session': 1, 'scan': 25, 'exp_day': 1},
+                {'date': '27_06_2025', 'scene': 'social_restrict_fam', 'session': 1, 'scan': 27, 'exp_day': 1},
+                {'date': '27_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 29, 'exp_day': 1},
+                {'date': '27_06_2025', 'scene': 'social_wheel_restrict', 'session': 1, 'scan': 31, 'exp_day': 1},
+
+                {'date': '28_06_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 2, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_restrict_fam', 'session': 1, 'scan': 4, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 6, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_restrict_nov', 'session': 1, 'scan': 8, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 10, 'exp_day': 2},
+                {'date': '28_06_2025', 'scene': 'social_wheel_restrict', 'session': 1, 'scan': 12, 'exp_day': 2},
+
+                {'date': '29_06_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 8, 'exp_day': 3},
+                {'date': '29_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 10, 'exp_day': 3},
+                {'date': '29_06_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 12, 'exp_day': 3},
+
+                {'date': '30_06_2025', 'scene': 'Env1_fixreward', 'session': 1, 'scan': 23, 'exp_day': 4},
+                {'date': '30_06_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 25, 'exp_day': 4},
+                {'date': '30_06_2025', 'scene': 'Env2_fixreward', 'session': 1, 'scan': 27, 'exp_day': 4},
+                {'date': '30_06_2025', 'scene': 'social_unrestrict_fam', 'session': 1, 'scan': 34, 'exp_day': 4},
+
+                {'date': '01_07_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 19, 'exp_day': 5},
+                {'date': '01_07_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 21, 'exp_day': 5},
+                {'date': '01_07_2025', 'scene': 'social_restrict_nov_diffsex', 'session': 1, 'scan': 23, 'exp_day': 5},
+                {'date': '01_07_2025', 'scene': 'social_unrestrict_nov_diffsex', 'session': 2, 'scan': 25, 'exp_day': 5},
+
+                {'date': '02_07_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 1, 'scan': 3, 'exp_day': 6},
+                {'date': '02_07_2025', 'scene': 'social_unrestrict_nov', 'session': 1, 'scan': 5, 'exp_day': 6},
+                {'date': '02_07_2025', 'scene': 'social_unrestrict_nov_diffsex', 'session': 1, 'scan': 7, 'exp_day': 6},
+                {'date': '02_07_2025', 'scene': 'Env1_to_Env2_fixreward', 'session': 2, 'scan': 9, 'exp_day': 6},
+                ),
 }
 
 social_SLP_sessions = {
