@@ -22,6 +22,10 @@ and saved in `path_dict['preprocessed_root']/sess/<animal>/<date>`.
 
 Set `overwrite` to `True` if you want to overwrite existing .pickle files. Otherwise, you will get an error that the file already exists.
 
+<!-- #region jp-MarkdownHeadingCollapsed=true -->
+### import dependencies
+<!-- #endregion -->
+
 ```python
 overwrite = True
 ```
@@ -33,15 +37,11 @@ import pickle
 import numpy as np
 
 import pandas as pd
-# import InVivoDA_analyses
 import social_int_analyses
-
-# from InVivoDA_analyses import preprocessing as pp
-from InVivoDA_analyses import utilities as ut
 
 from social_int_analyses import utilities_ES as u
 from social_int_analyses import sleap_utils as slp
-
+from social_int_analyses import alignment
 
 import TwoPUtils
 from TwoPUtils import preprocessing as pp
@@ -67,16 +67,11 @@ path_dict
 ```python
 from social_int_analyses.social_int_sess_deets import social_VR_sessions
 from social_int_analyses.social_int_sess_deets import social_mice
+
 ```
 
 ```python
-social_VR_sessions['social-0057-1']
-```
-
-```python
-# mouse = social_mice[6]
-# d = social_VR_sessions[mouse][3]
-# print(d)
+#NEED TO MOVE THESE TO UTILS EVENTUALLY 
 
 def update_sess_dict(mouse, day, KO = True):
     d = social_VR_sessions[mouse][day]
@@ -86,28 +81,19 @@ def update_sess_dict(mouse, day, KO = True):
     vrdir = path_dict['VR_Data']
     basedir = os.path.join(path_dict['sbx_root'], mouse,date,scene)
     stem =  os.path.join(basedir, f'{scene}_{session:03}_{scan:03}')
-    source_folder =  'C:/Users/esay/data/social_interaction/SLEAP_raw/videos'
-    
-    # if 'diffsex' in scene:
-    #     if 'unrestrict' in scene:
-    #         basedir = os.path.join(path_dict['sbx_root'], mouse,date,'social_unrestrict_nov_diffgender')
-    #         stem = os.path.join(basedir, 'social_unrestrict_nov_diffgender_'f'{session:03}_{scan:03}')
-    #     else:
-    #         basedir = os.path.join(path_dict['sbx_root'], mouse,date,'social_restrict_nov_diffgender')
-    #         stem =os.path.join(basedir, 'social_restrict_nov_diffgender_'f'{session:03}_{scan:03}')
-    
-    source_stem = os.path.join(source_folder, mouse, (scene +'.h5') ) #date, 
+    source_folder =  'C:/Users/esay/data/social_interaction/SLEAP_raw/videos' # CHANGE SO DEPENDENT ON PATH DICT
+    source_stem = os.path.join(source_folder, mouse, (scene +'.h5') )
     
     d.update({'mouse': mouse ,
               
               'scan_file':stem + '.sbx',
               'scanheader_file': stem + '.mat',
-              'vr_filename': os.path.join("C://Users/esay/data/social_interaction/VRData",mouse,date,"%s_%d.sqlite" %(scene,session)),
+              'vr_filename': os.path.join("C://Users/esay/data/social_interaction/VRData",mouse,date,"%s_%d.sqlite" %(scene,session)),  # CHANGE SO DEPENDENT ON PATH DICT
               'scan_number': scan,
               'prompt_for_keys': False,
               'VR_only': False,
               'scanner': "NLW",
-              'n_channels':2,
+              'n_channels':1,
               'n_planes':3
                  })
     return d
@@ -115,40 +101,56 @@ def update_sess_dict(mouse, day, KO = True):
 def run_and_save(d):
     sess = TwoPUtils.sess.Session(**d)
     sess.load_scan_info(sbx_version=3) #check sess.scan_info
-    sess.align_VR_to_2P()
+    alignment.align_VR_to_2P(sess)
+    
     # depends on vr being loaded already
-    sess.align_SLEAP_to_2P()
-    TwoPUtils.sess.save_session(sess,'C:/Users/esay/data/social_interaction/SessPkls')
+    alignment.align_SLEAP_to_2P(sess)
+    TwoPUtils.sess.save_session(sess,'C:/Users/esay/data/social_interaction/SessPkls')  # CHANGE SO DEPENDENT ON PATH DICT
     
 # source_stem
 ```
 
 ```python
-for mouse in mice:
+social_mice
+
+```
+
+<!-- #region jp-MarkdownHeadingCollapsed=true -->
+### for loop to create sess files for all mice
+<!-- #endregion -->
+
+```python
+for mouse in social_mice:
     print(mouse)
-    for day in range(0,18):
+    for day in range(18):
         print(day)
         d = update_sess_dict(mouse, day)
         run_and_save(d)
 
 ```
 
-```python
-sess.tunnel_data
-```
+### try generating one sess file first
 
 ```python
+mouse = 'social-0057-1'
+day = 0
+d = update_sess_dict(mouse, day)
+
 sess = TwoPUtils.sess.Session(**d)
 sess.load_scan_info(sbx_version=3) #check sess.scan_info
-sess.align_VR_to_2P()
+alignment.align_VR_to_2P(sess)
 # depends on vr being loaded already
-sess.align_SLEAP_to_2P()
+alignment.align_SLEAP_to_2P(sess)
 # sess.tunnel_data.shape, sess.vr_data.shape
 ```
 
 ```python
 TwoPUtils.sess.save_session(sess,'C:/Users/esay/data/social_interaction/SessPkls')
 ```
+
+<!-- #region jp-MarkdownHeadingCollapsed=true -->
+### everything below this is just me messing with data
+<!-- #endregion -->
 
 ```python
 interaction = sess.tunnel_data['interaction']

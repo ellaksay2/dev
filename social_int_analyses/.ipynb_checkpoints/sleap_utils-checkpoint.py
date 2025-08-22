@@ -18,21 +18,20 @@ def list_mp4_files(directory):
     # List to store mp4 file names
     mp4_files = []
 
-    # Iterate through files in the given directory
-    for filename in os.listdir(directory):
-        # Check if file is an mp4
-        if filename.endswith('.mp4'):
-            mp4_files.append(filename)
+    for day in os.listdir(directory):
+        day_path= os.path.join(directory, day)
+        for condition in os.listdir(day_path):
+            condition_path = os.path.join(day_path, condition)
+            for file in os.listdir(condition_path):
+                if file.endswith('tunnel.mp4'):
+                    full_path = os.path.join(condition_path, file)
+                    mp4_files.append(full_path)
+
     
     return mp4_files
 
-    
-# Change the brightness and contrast here
-brightness_value = 0.1 
-contrast_value = 1.2   
 
-# make bash script to edit brightness and contrast using ffmpeg
-def edit_video(dir, output, mp4_files, brightness=0.0, contrast=1.0): #defaults brightness 0.0 default contrast 1.0
+def edit_video_bash(dir, output, mp4_files, brightness=0.0, contrast=1.0): #defaults brightness 0.0 default contrast 1.0
     # Create a bash script file
     script_path = os.path.join(dir, 'edit_videos.sh')
     
@@ -47,10 +46,10 @@ def edit_video(dir, output, mp4_files, brightness=0.0, contrast=1.0): #defaults 
             output_path = os.path.join(output, f"{filename}_edited.mp4")
             
             # Generate ffmpeg command to adjust brightness and contrast
-            # ffmpeg_command = f"ffmpeg -i \"{input_path}\" -vf eq=brightness={brightness}:contrast={contrast} \"{output_path}\"\n"
+            ffmpeg_command = f"ffmpeg -i \"{input_path}\" -vf eq=brightness={brightness}:contrast={contrast} \"{output_path}\"\n"
 
             # Generate ffmpeg command to convert file type
-            ffmpeg_command = f"ffmpeg -y -i \"{input_path}\" -c:v libx264 -pix_fmt yuv420p -preset superfast -crf 23 \"{output_path}\"\n"
+            # ffmpeg_command = f"ffmpeg -y -i \"{input_path}\" -c:v libx264 -pix_fmt yuv420p -preset superfast -crf 23 \"{output_path}\"\n"
             
             # Write the command to the bash script
             script_file.write(ffmpeg_command)
@@ -59,19 +58,48 @@ def edit_video(dir, output, mp4_files, brightness=0.0, contrast=1.0): #defaults 
     os.chmod(script_path, 0o755)
     print(f"Bash script created: {script_path}")
 
+
+def edit_video_batch(dir, output, mp4_files, brightness=0.0, contrast=1.0): #defaults brightness 0.0 default contrast 1.0
+    # Create a bash script file
+    script_path = os.path.join(dir, 'edit_videos.')
+    
+    with open(script_path, 'w') as script_file:
+        # Write the bash script header
+        script_file.write("@echo off\n\n")
+
+        # Loop through each mp4 file and generate ffmpeg commands
+        for video in mp4_files:
+            filename = os.path.splitext(video)[0]
+            input_path = os.path.join(dir, video)
+            output_path = os.path.join(output, f"{filename}_edited.mp4")
+            
+            # Generate ffmpeg command to adjust brightness and contrast
+            ffmpeg_command = f"ffmpeg -i \"{input_path}\" -vf eq=brightness={brightness}:contrast={contrast} \"{output_path}\"\n"
+
+            # Generate ffmpeg command to convert file type
+            # ffmpeg_command = f"ffmpeg -y -i \"{input_path}\" -c:v libx264 -pix_fmt yuv420p -preset superfast -crf 23 \"{output_path}\"\n"
+            
+            # Write the command to the bash script
+            script_file.write(ffmpeg_command)
+
+    # Make the bash script executable
+    os.chmod(script_path, 0o755)
+    print(f"Batch script created: {script_path}")
+
 def create_inference_bash(directory, mp4_files, model_path, batch_size=4):
     # Calculate the number of scripts needed
     num_scripts = math.ceil(len(mp4_files) / batch_size)
 
     # Write the bash scripts
     for script_index in range(num_scripts):
-        # Create a bash script file
-        script_filename = f"{str(script_index+1).zfill(2)}_inference.bash" #name scripts
+        # Create a bash script file 
+        script_filename = f"{str(script_index+1).zfill(2)}_inference.sh" #name scripts
         script_path = os.path.join(directory, script_filename)
 
         with open(script_path, 'w') as script_file:
-            # Write the bash script header
+            # Write the bash script header (LINUX)
             script_file.write("#!/bin/bash\n\n")
+            # Write the batch script header (WINDOWS)
 
             # Write sleap-track commands for a batch of videos
             start_index = script_index * batch_size
@@ -81,7 +109,8 @@ def create_inference_bash(directory, mp4_files, model_path, batch_size=4):
                 video_path = os.path.join(directory, mp4_files[i])
                 sleap_command = (
                     f"sleap-track \"{video_path}\" "
-                    f"-m \"{model_path}\"\n"
+                    f"-m \"{model_path}\""
+                    f"-o \"{video_path}.predictions.slp\n"
 
                     # Convert .slp files to .h5 files for analysis
                     f"sleap-convert \"{video_path}.predictions.slp\" "
@@ -95,7 +124,24 @@ def create_inference_bash(directory, mp4_files, model_path, batch_size=4):
 
     print(f"Created {num_scripts} bash scripts in {directory}")
 
+def get_output_folder(video_path):
+    path = os.path.normpath(video_path)
+    parts = path.split(os.sep)
+    
+    try:
+        idx = 7 #parts.index("SLEAP_raw")
+    except ValueError:
+        raise ValueError("Path must contain 'SLEAP_raw'")
+    mouse = parts[idx]
+    day = parts[idx + 1]
+    condition = "social_" + parts[idx + 2]
+    output = os.path.join('C:/', *parts[1:idx], mouse, day, condition)
+    return output
+
+
 def create_inference_batch(directory, mp4_files, model_path, batch_size=4):
+    
+
     # Calculate the number of scripts needed
     num_scripts = math.ceil(len(mp4_files) / batch_size)
 
@@ -118,14 +164,17 @@ def create_inference_batch(directory, mp4_files, model_path, batch_size=4):
 
             for i in range(start_index, end_index):
                 video_path = os.path.join(directory, mp4_files[i])
+
+                output = get_output_folder(mp4_files[i])
                 sleap_command = (
                     f"sleap-track \"{video_path}\" "
                     f"-m \"{model_path}\" "
-                    f"-o \"{video_path}.predictions.slp\n"
+                    f" -o \"{video_path}.predictions.slp\" \n"
 
                     # Convert .slp files to .h5 files for analysis
                     f"sleap-convert \"{video_path}.predictions.slp\" "
-                    f"--format analysis \n"
+                    f" -o \"{output}.h5\""
+                    f" --format analysis \n"
                 )
                 # Write the command to the bash script
                 script_file.write(sleap_command)
